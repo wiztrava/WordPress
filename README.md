@@ -1,36 +1,238 @@
-WordPress
-Introduction
+# 🛠️ BadgeSmith
 
-WordPress is an open-source content management system (CMS) used to build, manage, and maintain websites and web applications. It is primarily developed with PHP and uses a relational database, typically MySQL or MariaDB, to store content, user accounts, configuration settings, and metadata. WordPress supports websites ranging from simple blogs and corporate portals to online stores, membership platforms, and content-heavy publishing systems.
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-The platform separates content management from presentation. Administrators create and edit pages, posts, media, and navigation menus through an administrative interface, while themes control the website's visual structure and layout. This separation allows teams to update content without modifying application code. Themes can also be customized to meet specific design and accessibility requirements.
+> Automate your way to GitHub achievement badges — transparently and responsibly.
 
-WordPress extends its core functionality through plugins. These components can introduce features such as search engine optimization, caching, form processing, security monitoring, analytics, and e-commerce. Developers can create custom plugins to implement business logic or integrate external services. The block editor provides a structured approach to composing content from reusable elements, including paragraphs, images, tables, and custom blocks.
+**BadgeSmith** is a collection of Python automation tools for earning GitHub profile badges. Each tool is self-contained, clearly documented, and built to be run on your own repos with your own accounts.
 
-The system includes role-based access control, allowing administrators to assign capabilities to different user groups. For example, editors can manage published content, while authors can create and manage their own posts. REST API endpoints enable programmatic access to supported resources, making integrations with external applications and custom frontends possible.
+---
 
-A production WordPress deployment requires appropriate hosting, PHP configuration, database connectivity, TLS encryption, regular updates, backups, and monitoring. Operational practices should also address plugin compatibility, performance optimization, access restrictions, and recovery procedures. Understanding these components helps IT professionals deploy, configure, secure, and maintain WordPress reliably across development, staging, and production environments.
+## Badges covered
 
-Installation, Configuration, and Deployment
+| Badge | Tool | What it does |
+|---|---|---|
+| 🦈 Pull Shark | `pull_shark.py` | Creates branches, commits, opens PRs, and merges them automatically |
+| 🤝 Pair Extraordinaire | `pair_extraordinaire.py` | Creates PRs with `Co-authored-by` commit trailers using two accounts |
+| 🧠 Galaxy Brain | `galaxy_brain.py` | Posts Q&A discussion pairs and marks answers as accepted using two accounts |
 
-A WordPress deployment consists of application files, a PHP runtime, a web server, and a database. Apache and Nginx are common web server choices. Before installation, verify that the hosting environment supports the required PHP version and database engine, provides sufficient memory and storage, and allows HTTPS configuration. Separate development, staging, and production environments to test changes before releasing them to users.
+---
 
-The installation process begins with preparing a database and a dedicated database account. Grant the account only the permissions required by the application. Configure the database connection through the installation interface or the wp-config.php file. This file also supports security-related settings, including authentication keys and salts. Store sensitive configuration values securely and avoid committing production credentials to version control.
+## Badge tiers
 
-After connecting WordPress to the database, complete the initial setup by defining the site title, administrator account, language, and timezone. Configure permalink settings to establish readable content URLs. For a production site, enforce HTTPS, restrict administrative access where practical, and disable public debugging output. During development, WP_DEBUG can help identify PHP warnings and errors; production systems should log relevant diagnostics without exposing them to visitors.
+### 🦈 Pull Shark
+| Tier | PRs merged |
+|---|---|
+| Default | 2 |
+| 🥉 Bronze | 16 |
+| 🥈 Silver | 128 |
+| 🥇 Gold | 1024 |
 
-For repeatable deployments, use version control for custom themes, plugins, and deployment configuration. Manage application changes through a controlled release process rather than editing production files directly. Database content and uploaded media require separate migration and backup strategies because they may change independently of application code.
+### 🤝 Pair Extraordinaire
+| Tier | Co-authored PRs merged |
+|---|---|
+| Default | 1 |
+| 🥉 Bronze | 10 |
+| 🥈 Silver | 24 |
+| 🥇 Gold | 48 |
 
-Before releasing a deployment, test authentication, page rendering, form submissions, media uploads, scheduled tasks, and permalink resolution. Confirm that file permissions allow required operations without granting unnecessary write access. Finally, document environment-specific settings, backup locations, restoration steps, and rollback procedures so the service can be recovered predictably after failed updates or infrastructure changes.
+### 🧠 Galaxy Brain
+| Tier | Accepted answers |
+|---|---|
+| 🔘 Default | 2 |
+| 🥉 Bronze | 8 |
+| 🥈 Silver | 16 |
+| 🥇 Gold | 32 |
 
-Content Management, Extensibility, and Maintenance
+---
 
-WordPress organizes published information primarily through posts and pages. Posts support time-oriented publishing and can be grouped using categories and tags. Pages typically represent relatively stable content, such as company information, service descriptions, and contact details. Media attachments store references to uploaded files and associated metadata. Selecting the appropriate content type improves navigation, editorial workflows, and long-term maintainability.
+## Requirements
 
-The block editor enables content authors to compose layouts using individual blocks. Common examples include headings, paragraphs, images, lists, and columns. Reusable patterns help teams maintain consistent page structures across multiple sections. For larger publishing environments, custom post types and custom taxonomies provide structured content models. A property management site, for example, could define a property post type with separate fields for location, price, and availability instead of embedding these values in unstructured text.
+- Python 3.8+
+- [GitHub CLI (`gh`)](https://cli.github.com/) — required for Pull Shark and Pair Extraordinaire
+- `requests` library — required for Galaxy Brain (`pip install requests`)
+- A GitHub personal access token with `repo` scope
+- For Galaxy Brain and Pair Extraordinaire: a second GitHub account
 
-Plugins and themes provide different extension points. Themes primarily control presentation, while plugins implement functionality that should remain available when the visual design changes. Custom functionality belongs in a dedicated plugin rather than directly in a third-party theme. This reduces the risk of losing business logic during a theme replacement or update. Developers can also use hooks: actions execute custom logic at specific points in the application lifecycle, while filters modify values before they are used or returned.
+---
 
-Maintenance requires a defined update process. Review WordPress core, plugin, and theme updates in staging before deploying them to production. Check compatibility, inspect application logs, and verify critical workflows after each release. Remove inactive components that are no longer needed, since outdated code increases the maintenance burden and may introduce security exposure.
+## Setup
 
-Establish automated backups for both the database and uploaded media, and periodically test restoration rather than assuming backups are usable. Monitor response times, PHP errors, disk capacity, and failed scheduled tasks. Where traffic is significant, apply page caching, optimize images, and use a content delivery network when appropriate. These measures help maintain predictable performance while preserving content integrity and service availability.
+### 1. Clone this repo
+```bash
+git clone https://github.com/03x1/BadgeSmith.git
+cd BadgeSmith
+```
+
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Authenticate the GitHub CLI
+```bash
+gh auth login
+```
+Follow the prompts. Select HTTPS and paste your token when asked.
+
+### 4. Create a target repo
+Create a public or private repo on GitHub to run the bots against. It needs a `README.md` file. For Galaxy Brain, enable Discussions and add a **Q&A** category under your repo's Settings → Features → Discussions.
+
+### 5. Clone your target repo locally
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
+```
+
+---
+
+## Tools
+
+### 🦈 Pull Shark — `pull_shark.py`
+
+Creates branches, appends a small comment to `README.md`, pushes, opens a PR via the `gh` CLI, merges it, and cleans up — then repeats.
+
+**Requirements:** GitHub token (`repo` scope), `gh` CLI installed and authenticated, a local clone of your target repo.
+
+**Setup:**
+
+Open `pull_shark.py` and fill in the configuration block at the top:
+
+```python
+GITHUB_USERNAME = "your-username"
+GITHUB_TOKEN    = "ghp_..."
+REPO_NAME       = "your-repo-name"
+REPO_PATH       = r"C:\path\to\your\repo"   # use raw string on Windows
+PR_COUNT        = 100
+DELAY_SECONDS   = 15
+```
+
+**Run:**
+```bash
+python pull_shark.py
+```
+
+---
+
+### 🤝 Pair Extraordinaire — `pair_extraordinaire.py`
+
+Creates PRs with a `Co-authored-by` trailer in the commit message, verified before each push. Uses your main account to open and merge PRs, with the second account listed as co-author.
+
+**Requirements:** Two GitHub accounts, tokens for both (`repo` scope), `gh` CLI authenticated as your main account.
+
+> **Windows note:** Commit messages are written to a temp file and committed with `git commit -F` to avoid multiline issues on Windows. This is handled automatically.
+
+**Setup:**
+
+Open `pair_extraordinaire.py` and fill in:
+
+```python
+MAIN_USERNAME   = "your-main-username"
+MAIN_TOKEN      = "ghp_..."
+SECOND_USERNAME = "your-second-username"
+SECOND_EMAIL    = "second@example.com"
+SECOND_TOKEN    = "ghp_..."
+REPO_NAME       = "your-repo-name"
+REPO_PATH       = r"C:\path\to\your\repo"
+PR_COUNT        = 50
+DELAY_SECONDS   = 12
+```
+
+**Run:**
+```bash
+python pair_extraordinaire.py
+```
+
+---
+
+### 🧠 Galaxy Brain — `galaxy_brain.py`
+
+Uses the GitHub GraphQL API to automate Q&A discussions. The second account posts questions, the main account answers them, and the second account marks the answers as accepted.
+
+**Requirements:** Two GitHub accounts, tokens for both (`repo` + `write:discussion` scope), Discussions enabled on your repo with a **Q&A category**.
+
+> **Rate limiting note:** If you see errors after ~19 rounds, increase `DELAY_SECONDS` to 25 or higher.
+
+**Setup:**
+
+1. Enable Discussions on your repo: **Settings → Features → Discussions ✓**
+2. Add a Q&A category: **Discussions → New Category → Question & Answer format**
+3. Fill in `galaxy_brain.py`:
+
+```python
+MAIN_USERNAME   = "your-main-username"
+MAIN_TOKEN      = "ghp_..."
+SECOND_USERNAME = "your-second-username"
+SECOND_TOKEN    = "ghp_..."
+REPO_NAME       = "your-repo-name"
+DELAY_SECONDS   = 20
+TOTAL_ROUNDS    = 32
+```
+
+**Run:**
+```bash
+python galaxy_brain.py
+```
+
+The script includes 35 built-in Q&A pairs and shuffles them on each run. You can add your own pairs to the `QA_PAIRS` list in the script.
+
+---
+
+## Repo structure
+
+```
+BadgeSmith/
+├── LICENSE
+├── README.md
+├── galaxy_brain.py
+├── pair_extraordinaire.py
+├── pull_shark.py
+└── requirements.txt
+```
+
+---
+
+## Generating a token
+
+1. Go to **GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)**
+2. Click **Generate new token**
+3. Select scopes:
+   - `repo` — required for all tools
+   - `write:discussion` — required for Galaxy Brain
+4. Copy the token and paste it into the script's config block
+
+> ⚠️ Never commit your token to a public repo. Add your scripts to `.gitignore` if you edit them with real credentials.
+
+---
+
+## Responsible use
+
+These tools automate actions using your own GitHub accounts and your own repositories. They do not:
+
+- Access anyone else's accounts or repos
+- Bypass any GitHub security controls
+- Violate GitHub's API rate limits (delays are built in)
+
+GitHub's [Terms of Service](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) permit automation on your own repos within API rate limits. That said, badges are ultimately cosmetic — use these tools for fun and learning, not to misrepresent your contributions in a professional context.
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `gh: command not found` | Install the [GitHub CLI](https://cli.github.com/) and run `gh auth login` |
+| Push fails with 403 | Check your token has `repo` scope and the remote URL is correct |
+| Galaxy Brain: can't mark answer | Make sure your repo has a **Q&A** discussion category, not just General |
+| Galaxy Brain: errors after ~19 rounds | Increase `DELAY_SECONDS` to 25 or higher |
+| Co-authored-by not appearing | The blank line between commit title and trailer is required — this is handled automatically by the script |
+| Badge not showing up | Badges can take up to 24 hours to appear on your profile after the threshold is reached |
+
+---
+
+## License
+
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
+
+You may use, modify, and distribute this software freely — but any distributed version must also be open source under the same license. You cannot sell this as closed-source software.
+
+Copyright (C) 2026 [03x1](https://github.com/03x1)
